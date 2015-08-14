@@ -12,6 +12,7 @@ import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.Switch;
@@ -56,13 +57,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     Switch writeSwitch;
 
     @InjectView(R.id.x_progress)
-    ProgressBar xProgressView;
+    View xProgressView;
 
     @InjectView(R.id.y_progress)
-    ProgressBar yProgressView;
+    View yProgressView;
 
     @InjectView(R.id.z_progress)
-    FrameLayout zProgressView;
+    View zProgressView;
 
     @InjectView(R.id.oscilloscope)
     Oscilloscope oscilloscopeView;
@@ -79,6 +80,18 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private Graph xGraph;
     private Graph yGraph;
     private Graph zGraph;
+
+    private int xViewSize;
+    private int yViewSize;
+    private int zViewSize;
+
+    private float xK;
+    private float yK;
+    private float zK;
+
+    private float xB;
+    private float yB;
+    private float zB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,11 +110,29 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         oscilloscopeView.addGraph(xGraph);
         oscilloscopeView.addGraph(yGraph);
         oscilloscopeView.addGraph(zGraph);
+
+        xProgressView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                xViewSize = ((View)xProgressView.getParent()).getHeight();
+                yViewSize = ((View)yProgressView.getParent()).getWidth();
+                zViewSize = ((View)zProgressView.getParent()).getHeight();
+
+                xK = xViewSize / 10f;
+                yK = yViewSize / 10f;
+                zK = zViewSize / 10f;
+
+                xB = 5f * xK;
+                yB = 5f * yK;
+                zB = 5f * zK;
+            }
+        });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+
         manager.registerListener(this, accelerometer, 100 * 1000 * 1000);
     }
 
@@ -131,25 +162,16 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         }
 
         if (allowWrite) {
-            byte[] buff = ByteBuffer
-                    .allocate(Long.SIZE / 8 + Float.SIZE / 8 * 3)
-                    .putLong(timestamp)
-                    .putFloat(x)
-                    .putFloat(y)
-                    .putFloat(z)
-                    .array();
-            try {
-                logStream.write(buff, 0, buff.length);
-            } catch (IOException ignored) {}
+            writeLog(timestamp, x, y, z);
         }
 
         xAccelerationView.setText(String.valueOf(x));
         yAccelerationView.setText(String.valueOf(y));
         zAccelerationView.setText(String.valueOf(z));
 
-        showXProgress(x);
-        showYProgress(y);
-        showZProgress(z);
+        showXProgress(x - xNormal);
+        showYProgress(y - yNormal);
+        showZProgress(z - zNormal);
 
         xGraph.add(x);
         yGraph.add(y);
@@ -158,20 +180,37 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         oscilloscopeView.invalidate();
     }
 
+    private void writeLog(long timestamp, float x, float y, float z) {
+        byte[] buff = ByteBuffer
+                .allocate(Long.SIZE / 8 + Float.SIZE / 8 * 3)
+                .putLong(timestamp)
+                .putFloat(x)
+                .putFloat(y)
+                .putFloat(z)
+                .array();
+        try {
+            logStream.write(buff, 0, buff.length);
+        } catch (IOException ignored) {}
+    }
+
     private void showZProgress(float z) {
         ViewGroup.LayoutParams params = zProgressView.getLayoutParams();
-        int value = (int) (200 + (zNormal - z) * 30);
-        params.height = value;
-        params.width = value;
+        int val = (int) (z * zK + zB);
+        params.height = val;
+        params.width = val;
         zProgressView.setLayoutParams(params);
     }
 
     private void showYProgress(float y) {
-        yProgressView.setProgress((int) (5000 - (yNormal - y) * 1000));
+        ViewGroup.LayoutParams params = yProgressView.getLayoutParams();
+        params.width = (int) (y * yK + yB);
+        yProgressView.setLayoutParams(params);
     }
 
     private void showXProgress(float x) {
-        xProgressView.setProgress((int) (5000 + (xNormal - x) * 1000));
+        ViewGroup.LayoutParams params = xProgressView.getLayoutParams();
+        params.height = (int) (x * xK + xB);
+        xProgressView.setLayoutParams(params);
     }
 
     @Override

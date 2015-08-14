@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     tools:context="com.gensko.sensorreader.activities.MainActivity"
     android:orientation="vertical"
-    android:padding="10dp">
+    android:padding="10dp"
+    android:id="@+id/background">
 
     <LinearLayout
         android:orientation="horizontal"
@@ -82,43 +83,31 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true">
 
-        <ProgressBar
-            style="?android:attr/progressBarStyleHorizontal"
+        <FrameLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:id="@+id/x_progress"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:rotation="-90"
-            android:scrollY="95dp"
-            android:max="10000"
-            android:indeterminate="false"
-            android:progress="5000"
-            android:progressTint="@android:color/holo_red_light"
-            android:progressTintMode="src_in" />
-
-        <ProgressBar
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/y_progress"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="false"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentBottom="true"
-            android:max="10000"
-            android:progress="5000"
-            android:indeterminate="false"
-            android:progressTintMode="src_in"
-            android:progressTint="@android:color/holo_green_light" />
-
-        <FrameLayout
-            android:layout_width="100dp"
-            android:layout_height="100dp"
             android:id="@+id/z_progress"
             android:layout_centerInParent="true"
             android:background="@android:color/holo_blue_light" />
+
+        <FrameLayout
+            android:layout_width="fill_parent"
+            android:layout_height="25dp"
+            android:layout_alignParentBottom="true"
+            android:id="@+id/y_progress"
+            android:background="@android:color/holo_green_light"
+            android:layout_alignParentStart="true"></FrameLayout>
+
+        <FrameLayout
+            android:layout_width="25dp"
+            android:layout_height="fill_parent"
+            android:id="@+id/x_progress"
+            android:layout_alignParentStart="true"
+            android:background="@android:color/holo_red_light"
+            android:layout_alignParentBottom="true">
+
+        </FrameLayout>
+
     </RelativeLayout>
 
     <LinearLayout

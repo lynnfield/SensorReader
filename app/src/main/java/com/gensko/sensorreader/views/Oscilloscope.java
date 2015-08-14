@@ -19,7 +19,7 @@ import java.util.List;
  * Created by Genovich V.V. on 12.08.2015.
  */
 public class Oscilloscope extends View {
-    private int length = 500;
+    private int length = 100;
     private List<Graph> graphs = new ArrayList<>();
     private Paint paint = new Paint();
 
