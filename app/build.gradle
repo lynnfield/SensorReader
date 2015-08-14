@@ -8,8 +8,8 @@ android {
         applicationId "com.gensko.sensorreader"
         minSdkVersion 19
         targetSdkVersion 22
-        versionCode 7
-        versionName "0.2.4"
+        versionCode 11
+        versionName "0.4.0"
     }
     buildTypes {
         release {

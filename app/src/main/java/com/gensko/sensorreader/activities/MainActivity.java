@@ -1,6 +1,8 @@
 package com.gensko.sensorreader.activities;
 
+import android.app.ActivityManager;
 import android.content.Context;
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -15,26 +17,22 @@ import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
 import com.gensko.sensorreader.R;
+import com.gensko.sensorreader.utils.Graph;
+import com.gensko.sensorreader.views.Oscilloscope;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Writer;
 import java.nio.ByteBuffer;
-import java.security.Permission;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener{
@@ -66,13 +64,21 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @InjectView(R.id.z_progress)
     FrameLayout zProgressView;
 
+    @InjectView(R.id.oscilloscope)
+    Oscilloscope oscilloscopeView;
+
     private File log;
     private FileOutputStream logStream;
     private boolean allowWrite;
     private boolean calibrate;
+
     private float xNormal;
     private float yNormal;
     private float zNormal;
+
+    private Graph xGraph;
+    private Graph yGraph;
+    private Graph zGraph;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +89,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         manager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         accelerometer = manager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+
+        xGraph = new Graph(Color.RED, 5);
+        yGraph = new Graph(Color.GREEN, 5);
+        zGraph = new Graph(Color.BLUE, 5);
+
+        oscilloscopeView.addGraph(xGraph);
+        oscilloscopeView.addGraph(yGraph);
+        oscilloscopeView.addGraph(zGraph);
     }
 
     @Override
@@ -108,7 +122,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             xNormal = x;
             yNormal = y;
             zNormal = z;
-            calibrate = !calibrate;
+
+            xGraph.setZero(xNormal);
+            yGraph.setZero(yNormal);
+            zGraph.setZero(zNormal);
+
+            calibrate = false;
         }
 
         if (allowWrite) {
@@ -131,11 +150,17 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         showXProgress(x);
         showYProgress(y);
         showZProgress(z);
+
+        xGraph.add(x);
+        yGraph.add(y);
+        zGraph.add(z);
+
+        oscilloscopeView.invalidate();
     }
 
     private void showZProgress(float z) {
         ViewGroup.LayoutParams params = zProgressView.getLayoutParams();
-        int value = (int) (100 + (zNormal - z) * 30);
+        int value = (int) (200 + (zNormal - z) * 30);
         params.height = value;
         params.width = value;
         zProgressView.setLayoutParams(params);

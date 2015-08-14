@@ -19,7 +19,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="X" />
+            android:text="X"
+            android:textColor="@android:color/holo_red_light" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -41,7 +42,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Y" />
+            android:text="Y"
+            android:textColor="@android:color/holo_green_light" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -63,7 +65,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Z" />
+            android:text="Z"
+            android:textColor="@android:color/holo_blue_light" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -91,7 +94,9 @@
             android:scrollY="95dp"
             android:max="10000"
             android:indeterminate="false"
-            android:progress="5000" />
+            android:progress="5000"
+            android:progressTint="@android:color/holo_red_light"
+            android:progressTintMode="src_in" />
 
         <ProgressBar
             style="?android:attr/progressBarStyleHorizontal"
@@ -104,7 +109,9 @@
             android:layout_alignParentBottom="true"
             android:max="10000"
             android:progress="5000"
-            android:indeterminate="false" />
+            android:indeterminate="false"
+            android:progressTintMode="src_in"
+            android:progressTint="@android:color/holo_green_light" />
 
         <FrameLayout
             android:layout_width="100dp"
@@ -128,15 +135,24 @@
             android:text="Write"
             android:id="@+id/write"
             android:layout_alignParentEnd="true"
-            android:checked="false" />
+            android:checked="false"
+            android:layout_gravity="right" />
 
         <Button
             style="?android:attr/buttonStyleSmall"
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Calibrate"
             android:id="@+id/calibrate" />
 
     </LinearLayout>
+
+    <com.gensko.sensorreader.views.Oscilloscope
+        android:layout_width="350dp"
+        android:layout_height="200dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/oscilloscope"
+        android:background="@android:color/transparent" />
 
 </RelativeLayout>
