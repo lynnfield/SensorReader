@@ -2,11 +2,10 @@
 /local.properties
 /.idea/workspace.xml
 /.idea/libraries
-.DS_Store
 /build
 *.apk
-abcstep-android.iml
 app/app.iml
+SensorReader.iml
 /.idea/compiler.xml
 /.idea/encodings.xml
 /.idea/gradle.xml

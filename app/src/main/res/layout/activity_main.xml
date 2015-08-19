@@ -6,7 +6,8 @@
     tools:context="com.gensko.sensorreader.activities.MainActivity"
     android:orientation="vertical"
     android:padding="10dp"
-    android:id="@+id/background">
+    android:id="@+id/background"
+    android:keepScreenOn="true">
 
     <LinearLayout
         android:orientation="horizontal"
@@ -15,12 +16,13 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:id="@+id/x_layout"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="10dp"
+        android:layout_toStartOf="@+id/actions">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="X"
+            android:text="@string/x"
             android:textColor="@android:color/holo_red_light" />
 
         <TextView
@@ -34,16 +36,17 @@
         android:orientation="horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="false"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="false"
         android:id="@+id/y_layout"
         android:layout_below="@+id/x_layout"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="10dp"
+        android:layout_toStartOf="@+id/actions">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Y"
+            android:text="@string/y"
             android:textColor="@android:color/holo_green_light" />
 
         <TextView
@@ -57,16 +60,17 @@
         android:orientation="horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="false"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="false"
         android:id="@+id/z_layout"
         android:layout_below="@+id/y_layout"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="10dp"
+        android:layout_toStartOf="@+id/actions">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Z"
+            android:text="@string/z"
             android:textColor="@android:color/holo_blue_light" />
 
         <TextView
@@ -80,7 +84,6 @@
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true">
 
         <FrameLayout
@@ -96,7 +99,7 @@
             android:layout_alignParentBottom="true"
             android:id="@+id/y_progress"
             android:background="@android:color/holo_green_light"
-            android:layout_alignParentStart="true"></FrameLayout>
+            android:layout_alignParentStart="true"/>
 
         <FrameLayout
             android:layout_width="25dp"
@@ -115,23 +118,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true">
+        android:layout_alignParentTop="true"
+        android:id="@+id/actions">
 
         <Switch
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Write"
+            android:text="@string/write"
             android:id="@+id/write"
-            android:layout_alignParentEnd="true"
             android:checked="false"
-            android:layout_gravity="right" />
+            android:layout_gravity="end" />
 
         <Button
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Calibrate"
+            android:text="@string/calibrate"
             android:id="@+id/calibrate" />
 
     </LinearLayout>
@@ -139,7 +141,7 @@
     <com.gensko.sensorreader.views.Oscilloscope
         android:layout_width="350dp"
         android:layout_height="200dp"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:id="@+id/oscilloscope"
         android:background="@android:color/transparent" />

@@ -1,7 +1,6 @@
 package com.gensko.sensorreader.views;
 
 import android.annotation.TargetApi;
-import android.app.ActivityManager;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -18,10 +17,11 @@ import java.util.List;
 /**
  * Created by Genovich V.V. on 12.08.2015.
  */
+@SuppressWarnings("DefaultFileTemplate")
 public class Oscilloscope extends View {
     private int length = 100;
-    private List<Graph> graphs = new ArrayList<>();
-    private Paint paint = new Paint();
+    private final List<Graph> graphs = new ArrayList<>();
+    private final Paint paint = new Paint();
 
     public Oscilloscope(Context context) {
         super(context);

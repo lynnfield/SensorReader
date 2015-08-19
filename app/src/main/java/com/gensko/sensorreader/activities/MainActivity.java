@@ -1,6 +1,5 @@
 package com.gensko.sensorreader.activities;
 
-import android.app.ActivityManager;
 import android.content.Context;
 import android.graphics.Color;
 import android.hardware.Sensor;
@@ -13,8 +12,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.widget.FrameLayout;
-import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,27 +41,35 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private SensorManager manager;
     private Sensor accelerometer;
 
+    @SuppressWarnings("WeakerAccess")
     @InjectView(R.id.x)
     TextView xAccelerationView;
 
+    @SuppressWarnings("WeakerAccess")
     @InjectView(R.id.y)
     TextView yAccelerationView;
 
+    @SuppressWarnings("WeakerAccess")
     @InjectView(R.id.z)
     TextView zAccelerationView;
 
+    @SuppressWarnings("WeakerAccess")
     @InjectView(R.id.write)
     Switch writeSwitch;
 
+    @SuppressWarnings("WeakerAccess")
     @InjectView(R.id.x_progress)
     View xProgressView;
 
+    @SuppressWarnings("WeakerAccess")
     @InjectView(R.id.y_progress)
     View yProgressView;
 
+    @SuppressWarnings("WeakerAccess")
     @InjectView(R.id.z_progress)
     View zProgressView;
 
+    @SuppressWarnings("WeakerAccess")
     @InjectView(R.id.oscilloscope)
     Oscilloscope oscilloscopeView;
 
@@ -132,7 +137,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     protected void onResume() {
         super.onResume();
-
         manager.registerListener(this, accelerometer, 100 * 1000 * 1000);
     }
 
@@ -144,6 +148,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
+
         long timestamp = sensorEvent.timestamp;
         float x = sensorEvent.values[ACCELEROMETER_X];
         float y = sensorEvent.values[ACCELEROMETER_Y];
@@ -180,46 +185,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         oscilloscopeView.invalidate();
     }
 
-    private void writeLog(long timestamp, float x, float y, float z) {
-        byte[] buff = ByteBuffer
-                .allocate(Long.SIZE / 8 + Float.SIZE / 8 * 3)
-                .putLong(timestamp)
-                .putFloat(x)
-                .putFloat(y)
-                .putFloat(z)
-                .array();
-        try {
-            logStream.write(buff, 0, buff.length);
-        } catch (IOException ignored) {}
-    }
-
-    private void showZProgress(float z) {
-        ViewGroup.LayoutParams params = zProgressView.getLayoutParams();
-        int val = (int) (z * zK + zB);
-        params.height = val;
-        params.width = val;
-        zProgressView.setLayoutParams(params);
-    }
-
-    private void showYProgress(float y) {
-        ViewGroup.LayoutParams params = yProgressView.getLayoutParams();
-        params.width = (int) (y * yK + yB);
-        yProgressView.setLayoutParams(params);
-    }
-
-    private void showXProgress(float x) {
-        ViewGroup.LayoutParams params = xProgressView.getLayoutParams();
-        params.height = (int) (x * xK + xB);
-        xProgressView.setLayoutParams(params);
-    }
-
     @Override
-    public void onAccuracyChanged(Sensor sensor, int i) {
-
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
     }
 
     @OnClick(R.id.write)
-    public void onWriteClick(View view) {
+    public void onWriteClick() {
         if (writeSwitch.isChecked()) {
 
             if (log == null) {
@@ -249,8 +220,41 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
 
     @OnClick(R.id.calibrate)
-    public void onCalibrateClick(View view) {
+    public void onCalibrateClick() {
         calibrate = true;
+    }
+
+    private void writeLog(long timestamp, float x, float y, float z) {
+        byte[] buff = ByteBuffer
+                .allocate(Long.SIZE / 8 + Float.SIZE / 8 * 3)
+                .putLong(timestamp)
+                .putFloat(x)
+                .putFloat(y)
+                .putFloat(z)
+                .array();
+        try {
+            logStream.write(buff, 0, buff.length);
+        } catch (IOException ignored) {}
+    }
+
+    private void showZProgress(float z) {
+        ViewGroup.LayoutParams params = zProgressView.getLayoutParams();
+        int val = (int) (-z * zK + zB);
+        params.height = val;
+        params.width = val;
+        zProgressView.setLayoutParams(params);
+    }
+
+    private void showYProgress(float y) {
+        ViewGroup.LayoutParams params = yProgressView.getLayoutParams();
+        params.width = (int) (y * yK + yB);
+        yProgressView.setLayoutParams(params);
+    }
+
+    private void showXProgress(float x) {
+        ViewGroup.LayoutParams params = xProgressView.getLayoutParams();
+        params.height = (int) (x * xK + xB);
+        xProgressView.setLayoutParams(params);
     }
 
     private static File createTempFile() throws IOException {

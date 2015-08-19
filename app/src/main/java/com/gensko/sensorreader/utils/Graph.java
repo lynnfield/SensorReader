@@ -8,10 +8,15 @@ import java.util.List;
 /**
  * Created by Genovich V.V. on 14.08.2015.
  */
+@SuppressWarnings("DefaultFileTemplate")
 public class Graph extends ArrayList<Float> {
     private Paint paint = new Paint();
     private float height;
     private float zero = 0f;
+
+    public Graph(int color) {
+        this(color, 5f);
+    }
 
     public Graph(int color, float height) {
         this.paint.setColor(color);
